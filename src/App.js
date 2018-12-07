@@ -1,25 +1,50 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from "axios";
+import { HashRouter, Route, Switch, NavLink } from "react-router-dom";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Form from "./components/Form/Form";
+import Header from "./components/Header/Header";
 import './App.css';
 
 class App extends Component {
+
+  constructor(props) {
+
+    super(props);
+    this.state = {
+        //  inventory: [],
+        //  selectedProduct: {}
+    }
+    // this.getInventory = this.getInventory.bind(this);
+    // this.setSelectedProduct = this.setSelectedProduct.bind(this);
+  }
+
+  // componentDidMount() {
+  //   this.getInventory();
+  // }
+
+  // getInventory() {
+  //   axios.get("/api/inventory").then(response => {
+  //     this.setState({
+  //       inventory: response.data
+  //     })
+  //   })
+  // }
+
+  // setSelectedProduct(product) {
+  //   this.setState({
+  //     selectedProduct: product
+  //   })
+  // }
+
+
   render() {
+    const { inventory, selectedProduct } = this.state;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Header />
+        <Dashboard inventory={inventory} getInventory={this.getInventory} setSelected={this.setSelectedProduct}/> 
+        <Form getInventory={this.getInventory} selectedProduct={selectedProduct} />
       </div>
     );
   }
