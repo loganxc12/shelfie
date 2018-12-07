@@ -39,13 +39,25 @@ class App extends Component {
 
 
   render() {
-    const { inventory, selectedProduct } = this.state;
+    // const { inventory, selectedProduct } = this.state;
     return (
+
       <div className="App">
-        <Header />
-        <Dashboard inventory={inventory} getInventory={this.getInventory} setSelected={this.setSelectedProduct}/> 
-        <Form getInventory={this.getInventory} selectedProduct={selectedProduct} />
+        <HashRouter>
+          <div className="App">
+            <Header></Header>
+            <Switch>
+              <Route path="/" component={Dashboard} exact />
+              <Route path="/add" component={Form} />
+              <Route path="/edit/:id" component={Form} />
+            </Switch>
+          {/* <Header />
+          <Dashboard inventory={inventory} getInventory={this.getInventory} setSelected={this.setSelectedProduct}/> 
+          <Form getInventory={this.getInventory} selectedProduct={selectedProduct} /> */}
+          </div>
+        </HashRouter>
       </div>
+      
     );
   }
 }

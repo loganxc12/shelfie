@@ -14,6 +14,8 @@ massive(process.env.CONNECTION_STRING).then(dbInstance => {
 
 app.get("/api/inventory", controller.getInventory);
 
+app.get("/api/product/:id", controller.getSingleProduct);
+
 app.post("/api/product", controller.postProduct);
 
 app.delete("/api/product/:id", controller.deleteProduct);

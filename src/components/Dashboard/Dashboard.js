@@ -27,24 +27,22 @@ class Dashboard extends Component {
 
      deleteProduct(id) {
           axios.delete(`/api/product/${id}`).then(response => {
-               this.props.getInventory();
+               this.getInventory();
           })
      }
 
      render() {
 
-          const { inventory, getInventory, setSelected } = this.props;
+          const { inventory, getInventory } = this.state;
           const inventoryToDisplay = inventory.map(item => {
                return <Product 
                          item={item} 
                          deleteProduct={() => this.deleteProduct(item.product_id)} 
-                         setSelected={() => setSelected(item)}
                       />
           })
 
           return (
                <div >
-               DASHBOARD
                { inventoryToDisplay }
                </div>
           );

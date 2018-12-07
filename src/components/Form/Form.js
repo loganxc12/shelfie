@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 
 class Form extends Component {
@@ -7,23 +8,36 @@ class Form extends Component {
           this.state = {
                imageUrl: "",
                productName: "",
-               price: 0,
+               price: "",
                selectedProductId: null,
-               addUpdateButtonValue: "Add to Inventory"
+               addUpdateButtonValue: "Add to Inventory",
+               redirect: false
           }
           this.handleInputChange = this.handleInputChange.bind(this);
           this.resetState = this.resetState.bind(this);
           this.postNewProduct = this.postNewProduct.bind(this);
           this.updateProduct = this.updateProduct.bind(this);
+          this.getSingleProduct = this.getSingleProduct.bind(this);
+          this.toggleRedirect = this.toggleRedirect.bind(this);
+     }
+
+     componentDidMount() {
+          if (this.props.match.params.id) {
+               this.getSingleProduct(this.props.match.params.id);
+          }
      }
 
      componentDidUpdate(prevProps) {
-          if (this.props.selectedProduct !== prevProps.selectedProduct) {
-               this.setState({
-                    selectedProductId: this.props.selectedProduct.product_id,
-                    addUpdateButtonValue: "Save Changes"
-               })
+          if (!(this.props.match.params.id) && (this.props !== prevProps)) {
+               this.resetState();
           }
+          // console.log(prevProps);
+          // if (this.props.selectedProduct !== prevProps.selectedProduct) {
+          //      this.setState({
+          //           selectedProductId: this.props.selectedProduct.product_id,
+          //           addUpdateButtonValue: "Save Changes"
+          //      })
+          // }
      }
 
      handleInputChange(e) {
@@ -36,7 +50,14 @@ class Form extends Component {
           this.setState({
                imageUrl: "",
                productName: "",
-               price: 0
+               price: ""
+          })
+     }
+
+     toggleRedirect() {
+          const redirectVal = this.state.redirect;
+          this.setState({
+               redirect: !redirectVal
           })
      }
 
@@ -48,8 +69,11 @@ class Form extends Component {
                imageUrl: imageUrl
           }
           axios.post("/api/product", newProduct).then(response => {
-               this.props.getInventory();
+               // this.props.getInventory();
                this.resetState();
+               this.setState({
+                    redirect: true
+               })
           })
      }
 
@@ -61,25 +85,45 @@ class Form extends Component {
                imageUrl: imageUrl
           }
           axios.put(`/api/product/${id}`, updatedProduct).then(response => {
-               this.props.getInventory();
+               // this.props.getInventory();
                this.resetState();
+               this.setState({
+                    redirect: true
+               })
+          })
+     }
+
+     getSingleProduct(id) {
+          axios.get(`/api/product/${id}`).then(response => {
+               const singleProduct = response.data[0];
+               console.log(singleProduct);
+               this.setState({
+                    productName: singleProduct.name,
+                    price: singleProduct.price,
+                    imageUrl: singleProduct.image_url
+               })
           })
      }
 
      render() {
+          const { redirect } = this.state;
 
-          const { imageUrl, productName, price, addUpdateButtonValue, selectedProductId} = this.state;
-          const addUpdateButton = (addUpdateButtonValue === "Add to Inventory") ?
-               <button onClick={this.postNewProduct}>Add to Inventory</button>
+          if (redirect) {
+          return <Redirect to='/' />;
+          }
+
+          const { imageUrl, productName, price } = this.state;
+          const addUpdateButton = (this.props.match.params.id) ?
+               <button onClick={() => this.updateProduct(this.props.match.params.id)}>Save Changes</button>
                     :
-               <button onClick={() => this.updateProduct(selectedProductId)}>Save Changes</button>
+               <button onClick={this.postNewProduct}>Add to Inventory</button>
 
           return (
                <div >
-                    <input placeholder="image url" name="imageUrl" onChange={this.handleInputChange} value={imageUrl}></input>
-                    <input placeholder="product name" name="productName" onChange={this.handleInputChange} value={productName}></input>
+                    <input name="imageUrl" onChange={this.handleInputChange} value={imageUrl}></input>
+                    <input name="productName" onChange={this.handleInputChange} value={productName}></input>
                     <input name="price" onChange={this.handleInputChange} value={price}></input>
-                    <button onClick={this.resetState}>Cancel</button>
+                    <button onClick={this.toggleRedirect}>Cancel</button>
                     {addUpdateButton}
                </div>
           );

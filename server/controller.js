@@ -8,7 +8,17 @@ module.exports = {
                     res.status(500).send({errorMessage: "Error in getInventory method"});
                     console.log(error);
                })
-      },
+     },
+
+     getSingleProduct: (req, res) => {
+          const dbInstance = req.app.get("db");
+          dbInstance.get_product(req.params.id)
+               .then( product => res.status(200).send(product) )
+               .catch( error => {
+                    res.status(500).send({errorMessage: "Error in getSingleProduct method"});
+                    console.log(error);
+               })
+     },
 
      postProduct: (req, res) => {
           const dbInstance = req.app.get("db");
