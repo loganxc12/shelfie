@@ -119,12 +119,19 @@ class Form extends Component {
                <button onClick={this.postNewProduct}>Add to Inventory</button>
 
           return (
-               <div >
-                    <input name="imageUrl" onChange={this.handleInputChange} value={imageUrl}></input>
-                    <input name="productName" onChange={this.handleInputChange} value={productName}></input>
-                    <input name="price" onChange={this.handleInputChange} value={price}></input>
-                    <button onClick={this.toggleRedirect}>Cancel</button>
-                    {addUpdateButton}
+               <div className="form-wrapper">
+                    <div className="form">
+                         <p>Image URL:</p>
+                         <input name="imageUrl" onChange={this.handleInputChange} value={imageUrl}></input>
+                         <p>Product Name:</p>
+                         <input name="productName" onChange={this.handleInputChange} value={productName}></input>
+                         <p>Price:</p>
+                         <input name="price" onChange={this.handleInputChange} value={price}></input>
+                         <div className="button-box">
+                              <button onClick={this.toggleRedirect}>Cancel</button>
+                              {addUpdateButton}
+                         </div>
+                    </div>
                </div>
           );
      }

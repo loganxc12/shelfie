@@ -42,7 +42,7 @@ class Dashboard extends Component {
           })
 
           return (
-               <div >
+               <div className="dashboard-wrapper">
                { inventoryToDisplay }
                </div>
           );
